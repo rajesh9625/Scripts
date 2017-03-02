@@ -5,21 +5,22 @@
     #>
     [CmdletBinding()]
     param (
-    [parameter(mandatory=$true)][ValidateNotNullorEmpty()][string]$xmlFilePath
+    [parameter(mandatory=$true)][ValidateNotNullorEmpty()][string]$XmlFilePath
     )
 
     # Check the file exists
-    if (!(Test-Path -Path $xmlFilePath)){
-    throw "$xmlFilePath is not valid. Please provide a valid path to the .xml fileh"
+    if (!(Test-Path -Path $XmlFilePath)){
+    throw "$XmlFilePath is not valid. Please provide a valid path to the .xml file"
     }
-    # Check for Load or Parse errors when loading the XML file
+    # Checking for Load or Parse errors when loading the XML file
     $xml = New-Object System.Xml.XmlDocument
     try {
     $xml.Load((Get-ChildItem -Path $xmlFilePath).FullName)
     return $true
     }
     catch [System.Xml.XmlException] {
-    Write-Host "$xmlFilePath : $($_.toString())"
+    Write-Error $_.Exception.Message
+    #echo $_.Exception|format-list -force
     return $false
     }
     }
